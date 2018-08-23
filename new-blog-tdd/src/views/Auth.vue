@@ -9,12 +9,13 @@
           <li :class="{active:progres3}">Register</li>
         </ul>
         <!-- fieldsets -->
+        <h4 class="error">{{errorMsg}}</h4>
         <fieldset v-if="fieldset1">
           <h2 class="fs-title">Sign In</h2>
-          <input type="text" id="emailLogin" name="email" placeholder="Email" />
-          <input type="password" id="passwordLogin" name="pass" placeholder="Password" />
-          <input type="button" name="next" class="signIn action-button" value="Sign In" />
-          <input type="button" name="next" class="next action-button"  value="Social Media" @click="next" />
+          <a href="#!" type="button" @click="next" >login with social media or register </a>
+          <input type="text" id="emailLogin" name="email" placeholder="Email" v-model="email"/>
+          <input type="password" id="passwordLogin" name="pass" placeholder="Password" v-model="password"/>
+          <input type="button" name="next" class="signIn action-button" value="Sign In" @click="signIn"/>
         </fieldset>
         <fieldset v-if="fieldset2">
           <h2 class="fs-title">Social Profiles</h2>
@@ -28,18 +29,18 @@
         <fieldset v-if="fieldset3">
           <h2 class="fs-title">Personal Details</h2>
           <h3 class="fs-subtitle">We will never sell it</h3>
-          <input type="text" id="name" placeholder="insert your name here..." />
-          <input type="text" id="email" placeholder="e.g : example@mail.com" />
-          <input type="password" id="password" name="pass" placeholder="e.g:abc123" />
+          <input type="text" id="name" placeholder="insert your name here..." v-model="name"/>
+          <input type="text" id="email" placeholder="e.g : example@mail.com" v-model="email"/>
+          <input type="password" id="password" name="pass" placeholder="e.g:abc123" v-model="password"/>
           <input type="button" name="previous" class="previous action-button" value="Previous" @click="prev"/>
-          <input type="submit" name="submit" class="submit action-button" value="Submit" />
+          <input type="submit" name="submit" class="submit action-button" value="Submit" @click="register"/>
         </fieldset>
       </div>
   </div>
 </template>
 <script>
-
-
+import axios from 'axios'
+const BASE_URL = 'https://newblog.adrowicaksono.xyz/'
 export default {
   data() {
     return {
@@ -48,7 +49,11 @@ export default {
       fieldset3 : false,
       progres2 : false,
       progres3 : false,
-      count : 0
+      count : 0,
+      email : '',
+      password : '',
+      errorMsg : '',
+      isError : false,
     }
   },
   watch:{
@@ -73,17 +78,73 @@ export default {
       }
     }
   },
+  mounted () {
+    let token = localStorage.getItem("Authorization")
+    if(token){
+      this.$router.replace('/')
+    }
+  },
   methods:{
     next () {
-      
       if(this.count < 3){
         this.count++
       }
+      this.isError = false
+      this.errorMsg = ''
     },
     prev() {
       if(this.count > 0){
         this.count--
       }
+      this.isError = false
+      this.errorMsg = ''
+    },
+    signIn () {
+        let data = {
+          email : this.email,
+          password : this.password
+        } 
+        console.log("sign in :" , data)
+        console.log('env', BASE_URL)
+        axios
+        .post(BASE_URL+'auth', data)
+        .then(response => {
+            console.log('auth auth', response.data.token)
+            this.email = ''
+            this.password = ''
+            localStorage.setItem ('Authorization', response.data.token)
+            this.$router.push('/home')
+        })
+        .catch( err => {
+          this.isError = true
+          this.errorMsg = err.response.data.msg
+            this.name = ''
+            this.password = ''
+        }) 
+    },
+    register () {
+      let data = {
+        name :this.name,
+        email : this.email,
+        password : this.password
+      }
+      console.log('register :',data)
+      axios.post(BASE_URL+'users', data)
+      .then(  response => {
+        console.log(response)
+        this.isError = false
+        this.errorMsg = ''
+        this.fieldset1 = true
+        this.fieldset2 = false
+        this.fieldset3 = false
+      })
+      .catch( err =>  {
+          this.isError = true
+          this.errorMsg = err.response.data.msg
+          this.name = ''
+          this.password = ''
+          this.email = ''
+      })
     }
   }
 }
@@ -239,5 +300,9 @@ body {
 
 #progressbar li.active {
   color: rgb(230, 79, 9);
+}
+
+.error {
+  color: red;
 }
 </style>

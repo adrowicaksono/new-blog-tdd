@@ -1,6 +1,5 @@
 <template>
     <div class="adminContainer">
-        
         <div class="form">
             <h1>Editor</h1>
             <img v-bind:src="img" alt="your image will be here" srcset="">
@@ -46,6 +45,7 @@ export default {
             title : '',
             tag : '',
             content : '',
+            params : ''
         }
     },
     methods: {

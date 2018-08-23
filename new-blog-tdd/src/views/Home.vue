@@ -1,5 +1,9 @@
 <template>
-  <h1>home</h1>
+  <div>
+    <h1>dasdasads</h1>
+    <hr>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
