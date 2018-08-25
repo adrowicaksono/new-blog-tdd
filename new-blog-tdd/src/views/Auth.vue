@@ -13,27 +13,25 @@
         <fieldset v-if="fieldset1">
           <h2 class="fs-title">Sign In</h2>
           <a href="#!" type="button" @click="next" >login with social media or register </a>
-          <input type="text" id="emailLogin" name="email" placeholder="Email" v-model="email"/>
-          <input type="password" id="passwordLogin" name="pass" placeholder="Password" v-model="password"/>
-          <input type="button" name="next" class="signIn action-button" value="Sign In" @click="signIn"/>
+          <input type="text" id="emailLogin"  placeholder="Email" v-model="email"/>
+          <input type="password" id="passwordLogin"  placeholder="Password" v-model="password"/>
+          <input type="button"  class="signIn action-button" value="Sign In" @click="signIn"/>
         </fieldset>
         <fieldset v-if="fieldset2">
           <h2 class="fs-title">Social Profiles</h2>
           <h3 class="fs-subtitle">Your presence on the social network</h3>
-          <input type="button" name="next" class="previous fb-button" value="Login Facebook" onclick="login()"/>
-          <input type="text" name="twitter" placeholder="Twitter" />
-          <input type="text" name="gplus" placeholder="Google Plus" />
-          <input type="button" name="previous" class="previous action-button" value="Previous" @click="prev"/>
-          <input type="button" name="next" class="next action-button" value="Register" @click="next"/>
+          <input type="button"  class="previous fb-button" value="Login Facebook" onclick="login()"/>
+          <input type="button"  class="previous action-button" value="Previous" @click="prev"/>
+          <input type="button" class="next action-button" value="Register" @click="next"/>
         </fieldset>
         <fieldset v-if="fieldset3">
           <h2 class="fs-title">Personal Details</h2>
           <h3 class="fs-subtitle">We will never sell it</h3>
-          <input type="text" id="name" placeholder="insert your name here..." v-model="name"/>
-          <input type="text" id="email" placeholder="e.g : example@mail.com" v-model="email"/>
-          <input type="password" id="password" name="pass" placeholder="e.g:abc123" v-model="password"/>
-          <input type="button" name="previous" class="previous action-button" value="Previous" @click="prev"/>
-          <input type="submit" name="submit" class="submit action-button" value="Submit" @click="register"/>
+          <input type="text"  placeholder="insert your name here..." v-model="name"/>
+          <input type="text"  placeholder="e.g : example@mail.com" v-model="email"/>
+          <input type="password"  placeholder="e.g:abc123" v-model="password"/>
+          <input type="button"  class="previous action-button" value="Previous" @click="prev"/>
+          <input type="submit"  class="submit action-button" value="Submit" @click="register"/>
         </fieldset>
       </div>
   </div>
@@ -50,6 +48,7 @@ export default {
       progres2 : false,
       progres3 : false,
       count : 0,
+      name: '',
       email : '',
       password : '',
       errorMsg : '',
@@ -113,7 +112,7 @@ export default {
             this.email = ''
             this.password = ''
             localStorage.setItem ('Authorization', response.data.token)
-            this.$router.push('/home')
+            this.$router.push('/')
         })
         .catch( err => {
           this.isError = true

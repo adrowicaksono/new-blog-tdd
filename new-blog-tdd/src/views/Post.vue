@@ -2,6 +2,7 @@
     <div class="adminContainer">
         <div class="form">
             <h1>Editor</h1>
+            <h3 style="color:red">{{error}}</h3>
             <img v-bind:src="img" alt="your image will be here" srcset="">
             <div class="formItem">
                 <input type="file" name="" id=""  v-on:change="handleFileUpload($event)">
@@ -21,8 +22,10 @@
                 <vue-editor v-model="content" style="width:100%:height:auto;" ></vue-editor>
             <br>
             <div class="button-group">
-                <button @click="additem" class="button-orange">Save</button>
-                <button @click="additem" class="button-orange">Cancel</button>
+                <button v-if="isPost" @click="additem" class="button-orange">Save</button>
+                <button v-if="!isPost" @click="edititem" class="button-orange">Edit</button>
+                <button v-if="!isPost" @click="$emit('update-article')" class="button-orange">Cancel</button>
+                <button v-if="isPost" class="button-orange"> <router-link to="/" style="text-decoration:none;color:white;">Cancel</router-link></button>
             </div>
         </div>
                 
@@ -32,7 +35,7 @@
 <script>
 import axios from 'axios'
 import { VueEditor } from 'vue2-editor'
-
+const BASE_URL = 'https://newblog.adrowicaksono.xyz/'
 export default {
     components :{
         VueEditor
@@ -45,10 +48,36 @@ export default {
             title : '',
             tag : '',
             content : '',
-            params : ''
+            params : '',
+            isPost : true,
+            id : '',
+            error : '',
+        }
+    },
+    mounted () {
+        console.log("post :",this.$route.name)
+        if(this.$route.name === 'edit'){
+            console.log("ubah tombol")
+            this.fillEdit(this.$route.params.article)
+        }
+    },
+    watch :{
+        '$route' (to, from){
+            if(this.$route.name === 'edit'){
+                console.log("ubah tombol")
+                this.fillEdit(this.$route.params.article)
+            }    
         }
     },
     methods: {
+        fillEdit(article){
+            this.isPost =false;
+            this.img = article.img
+            this.title = article.title
+            this.tag = article.tag.join(' ')
+            this.id = article._id
+            this.content = article.content
+        },
         additem (){
             let data = {
                 img : this.img,
@@ -56,13 +85,46 @@ export default {
                 tag : this.tag,
                 content : this.content,
             }
-            console.log(data)
-            axios.post('http://localhost:4000/', data)
+            let Authorization = localStorage.getItem("Authorization")
+            console.log(data, Authorization)
+            axios.post(BASE_URL+'articles'
+                , data
+                , {
+                    headers : {
+                        Authorization:Authorization
+                    }
+                })
             .then(response =>{
-                console.log("succesfully added item",response)
+                console.log("succesfully added item", response)
             })
             .catch(err => {
-                console.log(err.message)
+                console.log("post error : ",err)
+                this.error = err.response.data.msg
+            })
+        },
+        edititem () {
+            let data = {
+                img : this.img,
+                title : this.title,
+                tag : this.tag,
+                content : this.content,
+            }
+            let Authorization = localStorage.getItem("Authorization")
+            console.log(data, Authorization)
+            axios.put(BASE_URL+'articles?id='+this.id
+                , data
+                , {
+                    headers : {
+                        Authorization:Authorization
+                    }
+                })
+            .then(response =>{
+                console.log("succesfully edit item", response)
+                this.$emit("update-article")
+            })
+            .catch(err => {
+                console.log("post error : ",err)
+                this.error = err.response.data.msg
             })
         },
          handleFileUpload : function(e){
@@ -104,6 +166,8 @@ img{
     justify-content: center;
     width:100%;
     flex-direction: column;
+    background-color: rgba(255, 255, 255, 0.644);
+    border-radius: 2px;
 }
 
 h1{

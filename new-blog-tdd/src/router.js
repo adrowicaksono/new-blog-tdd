@@ -19,8 +19,14 @@ export default new Router({
           path:'/:id/article',
           name : 'article',
           component : Article
+        },
+        {
+          path:'/:id/edit',
+          name:'edit',
+          component : Post
         }
-      ]
+      ],
+      props:true,
     },
     {
       path: '/auth',

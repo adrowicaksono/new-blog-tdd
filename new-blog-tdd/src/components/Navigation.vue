@@ -9,8 +9,7 @@
         <div class="menu">
                 <ul v-bind:class="{showing: isMobile}">
                     <li><router-link to="/">HOME</router-link></li>
-                    <li><router-link to="/about">ABOUT</router-link></li>
-                    <li><router-link :to="{path:'/beranda'}">BERANDA</router-link></li>
+                    <li><router-link :to="{path:'/post'}">POST</router-link></li>
                 </ul>     
         </div>
     </nav>
