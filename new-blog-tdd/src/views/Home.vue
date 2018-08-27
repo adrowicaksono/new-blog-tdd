@@ -40,7 +40,7 @@
 import axios from 'axios'
 import HelloWorld from '@/components/HelloWorld.vue'
 import jwt from 'jsonwebtoken'
-import { functionDeclaration } from 'babel-types';
+
 const BASE_URL = 'https://newblog.adrowicaksono.xyz/'
 export default {
   name: 'home',
@@ -90,7 +90,6 @@ export default {
       }) 
     },
     update () {
-      console.log("di home update")
       this.getInfo()
       this.$router.replace('/')
     },
@@ -124,7 +123,6 @@ export default {
          }
        })
        .then( response => {
-         console.log("you have delete", response)
          this.update()
        })
        .catch(err => {
@@ -134,13 +132,10 @@ export default {
     },
     getGuest(){
       let token = localStorage.getItem("Authorization")
-      console.log("=====",token)
       if(token){
-       console.log('ada token')
         jwt.verify(token, 'hacktiv8', ( err, decoded )=>{
           if(err) console.log("from get guest :",err)
           this.guestId = decoded.id
-          console.log(decoded.id, "===========")
         })
       }
     }

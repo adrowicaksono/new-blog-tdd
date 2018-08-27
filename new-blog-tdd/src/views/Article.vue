@@ -8,10 +8,17 @@
     </div>
     <img :src="article.img" alt="" srcset="">
     <div style="width:80%;margin:auto;text-align:justify;padding:5px;box-sizing:border-box;" v-html="article.content">{{article.content}}</div>
+    <div>
+      <Comment :articleId="article._id"></Comment>
+    </div>
   </div>
 </template>
 <script>
+import Comment from '@/components/Comments.vue'
 export default {
+  components:{
+    Comment
+  },
   data () {
     return {
       id : '',
@@ -19,16 +26,14 @@ export default {
     }
   },
   mounted () {
-        console.log(this.$route.params.article)
-        console.log(this.$route, 'ramss')
         this.id = this.$route.params.id
         this.article = this.$route.params.article
     },
     watch: {
         '$route' (to, from) {
-            console.log('haii di watch post')
             this.params = this.$route.params.id
             this.article = this.$route.params.article
+            
         // react to route changes...
         }
     },

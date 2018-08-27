@@ -10,6 +10,8 @@
                 <ul v-bind:class="{showing: isMobile}">
                     <li><router-link to="/">HOME</router-link></li>
                     <li><router-link :to="{path:'/post'}">POST</router-link></li>
+                    <li v-if="!isLogin"><router-link :to="{name:'auth'}">LOGIN</router-link></li>
+                    <li v-if="isLogin"><a href="#!" @click="logout">LOGOUT </a></li>
                 </ul>     
         </div>
     </nav>
@@ -19,9 +21,27 @@
 export default {
     data () {
         return{
+            isLogin : false,
             isMobile:false,
             img : '/img/lazadaIcon.png'
         }
+    },
+    mounted () {
+          if(localStorage.getItem("Authorization")){
+            this.isLogin = true
+          }else{
+            this.isLogin = false
+          }
+    },
+    watch : {
+      '$route' (to, from) {
+          console.log("woyyyyy")
+          if(localStorage.getItem("Authorization")){
+            this.isLogin = true
+          }else{
+            this.isLogin = false
+          }
+      }
     },
     methods:{
         toggleMenu () {
@@ -30,6 +50,10 @@ export default {
             }else{
                 this.isMobile=true
             }
+        },
+        logout () {
+              this.isLogin = false
+            localStorage.clear()
         },
     }
 }
