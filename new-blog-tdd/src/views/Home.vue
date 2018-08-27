@@ -13,9 +13,10 @@
         <div class="divider"></div>
         <p><strong>action :</strong></p>
         <div  style="display:flex; justify-content:flex-end">
-          <button v-if="article.userId._id === guestId" @click="edit(article)">edit</button>
-          <button v-if="article.userId._id === guestId" @click="remove(article)">delete</button> 
-          <button @click="readMore(article)">read mode </button>
+          <button style="margin:2px;" class="button" v-if="article.userId._id === guestId" @click="edit(article)">edit</button>
+          
+          <button style="margin:2px;" class="button" v-if="article.userId._id === guestId" @click="remove(article)">delete</button> 
+          <button style="margin:2px;" class="button" @click="readMore(article)">read mode </button>
         </div>
       </div>
     </div>

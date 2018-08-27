@@ -1,16 +1,20 @@
 <template>
-    <div class="commentContainer">
-        <p>{{articleId}}</p>
+    <div class="commentContainer card">
+        <h1>Comments :</h1>
         <div class="formComment">
             <textarea v-model="textcomment" id="" cols="30" rows="10"></textarea>
-            <button @click="createComment">Comment</button>
+            <button class="button" @click="createComment">Comment</button>
             <p style="color:red"><strong>{{error}}</strong></p>
         </div>
         <div>
             <p><strong style="color:red">{{deleteError}}</strong></p>
         </div>
-        <div v-for="e in comments" :key="e._id">
-            <p>{{e.comment}}</p>
+        <div v-for="e in comments" :key="e._id" class="card">
+            <h5><strong> {{e.userId.name}} ({{e.userId._id}}) :</strong></h5>
+            <p><strong>comment :</strong></p>
+            <div class="card">
+                <p>{{e.comment}}</p>
+            </div>
             <button @click="deleteComment(e._id)">delete</button>
         </div>
     </div>
@@ -105,3 +109,13 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+@import "../assets/scss/home.scss";
+
+.formComment {
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+}
+</style>

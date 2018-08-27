@@ -8,8 +8,8 @@
     </div>
     <img :src="article.img" alt="" srcset="">
     <div style="width:80%;margin:auto;text-align:justify;padding:5px;box-sizing:border-box;" v-html="article.content">{{article.content}}</div>
-    <div>
-      <Comment :articleId="article._id"></Comment>
+    <div class="commentContainer">
+      <Comment  :articleId="article._id"></Comment>
     </div>
   </div>
 </template>
@@ -77,6 +77,10 @@ export default {
   flex-direction: row;
   justify-content: center;
   font-size: 14px;
+}
+
+.commentContainer {
+  width: 100%;
 }
 
 </style>
