@@ -41,3 +41,21 @@
     font-family:sans-serif;
     font-size:11pt;
 }
+
+.tagContainer {
+    display:flex; 
+    flex-direction:row wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.tag {
+    background-color: rgba(92, 89, 84, 0.719);
+    margin: 2px;
+    padding: 5px;
+    text-align: center;
+    box-shadow: lightslategrey;
+    border-radius: 3px;
+    box-sizing: border-box;
+    color: white;
+    
+}

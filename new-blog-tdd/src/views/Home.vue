@@ -3,11 +3,20 @@
     <div class="asideLeft">
       <div class="card" v-for="article in articles" :key="article.id" >
         <h1>{{article.title}}</h1>
-        <p>{{article._id}}</p>
+        <p>article id : {{article._id}}</p>
         <div class="divider"></div>
         <img class="cardImg" :src="article.img" alt="" srcset="">
-        <p>{{contentThumbnail(article.content)}}</p>
+        <p v-html="contentThumbnail(article.content)"></p>
         <p><strong>created : </strong>{{dateFormat(new Date(article.createdAt))}}</p>
+        <div>
+          <p><strong>tags :  </strong> 
+            <span>
+            <div  class="tagContainer">
+              <p v-for="(e,i) in getTags(article.tag)" :key="{i}" class="tag">{{e}}</p>
+            </div>
+            </span>
+          </p>
+        </div>
         <p><strong>author : </strong>{{article.userId.name}}</p>
         <p><strong>contact : </strong>{{article.userId.email}}</p>
         <div class="divider"></div>
@@ -16,7 +25,7 @@
           <button style="margin:2px;" class="button" v-if="article.userId._id === guestId" @click="edit(article)">edit</button>
           
           <button style="margin:2px;" class="button" v-if="article.userId._id === guestId" @click="remove(article)">delete</button> 
-          <button style="margin:2px;" class="button" @click="readMore(article)">read mode </button>
+          <button style="margin:2px;" class="button" @click="readMore(article)">read more </button>
         </div>
       </div>
     </div>
@@ -58,6 +67,15 @@ export default {
   components: {
     HelloWorld
   },
+  watch: {
+    '$route' (to, from) {
+      if (this.$route.name === 'home' ){
+        this.getInfo()
+        this.getGuest()
+        console.log("watch di home")
+      }
+    }
+  },
   mounted(){
     this.getInfo()
     this.getGuest()
@@ -67,7 +85,6 @@ export default {
     getInfo  (){
       axios.get(BASE_URL+'articles')
       .then(response => {
-        console.log(response)
         let data = response.data.data
         this.articles = data
         let updated = data[0]
@@ -78,14 +95,12 @@ export default {
             updated = el
           }
         })
-        console.log(updated, "updated")
         this.updated = updated
         this.$router.replace({name:'article', params:{id:updated._id, article:updated}})
         this.error = ''
         this.isError = false
       })
       .catch( err => {
-        console.log(err.response)
         this.error = 'maintance mode'
         this.isError = true
       }) 
@@ -134,15 +149,18 @@ export default {
     getGuest(){
       let token = localStorage.getItem("Authorization")
       if(token){
-        jwt.verify(token, 'hacktiv8', ( err, decoded )=>{
-          if(err) console.log("from get guest :",err)
+        jwt.verify (token, 'hacktiv8', ( err, decoded ) => {
+          if (err) console.log('from get guest :', err)
           this.guestId = decoded.id
         })
+      } else {
+        this.guestId = null
       }
+    },
+    getTags (tagString) {
+      return tagString[0].split(' ')
     }
-  },
- 
-  
+  }
 }
 </script>
 
@@ -173,9 +191,6 @@ export default {
   padding:2px;
   box-sizing: border-box;
   margin: 3px;
-  border-radius: 2px; 
+  border-radius: 2px;
 }
-
-
 </style>
-

@@ -1,5 +1,6 @@
 <template>
   <div class="about">
+    <h1>{{error}}</h1>
     <h1>{{article.title}}</h1>
     <div class="legend">
       <p><strong>author : </strong>{{article.userId.name}}</p>
@@ -8,6 +9,15 @@
     </div>
     <img :src="article.img" alt="" srcset="">
     <div style="width:80%;margin:auto;text-align:justify;padding:5px;box-sizing:border-box;" v-html="article.content">{{article.content}}</div>
+     <div style="align-self:flex-start"> 
+        <p><strong>tags :  </strong> 
+          <span>
+          <div  class="tagContainer">
+            <p v-for="(e,i) in getTags(article.tag)" :key="{i}" class="tag">{{e}}</p>
+          </div>
+          </span>
+        </p>
+      </div>
     <div class="commentContainer">
       <Comment  :articleId="article._id"></Comment>
     </div>
@@ -15,6 +25,7 @@
 </template>
 <script>
 import Comment from '@/components/Comments.vue'
+import axios from 'axios'
 export default {
   components:{
     Comment
@@ -22,19 +33,23 @@ export default {
   data () {
     return {
       id : '',
-      article :''
+      article :'',
+      error : '',
     }
   },
   mounted () {
-        this.id = this.$route.params.id
-        this.article = this.$route.params.article
+        if(this.$route.params.article){
+          this.id = this.$route.params.id
+          this.article = this.$route.params.article
+          console.log("mounted di if")
+        } else {
+          console.log("mounted di else") 
+        }
     },
     watch: {
         '$route' (to, from) {
             this.params = this.$route.params.id
             this.article = this.$route.params.article
-            
-        // react to route changes...
         }
     },
     methods:{
@@ -51,12 +66,25 @@ export default {
         var year = date.getFullYear();
   
         return day + ' ' + monthNames[monthIndex] + ' ' + year;
+      },
+      getTags (tagString) {
+        return tagString[0].split(' ')
+      },
+      getRandomArticle () {
+        // axios.get(BASE_URL+'articles')
+        // .then(response => {
+          
+        // })
+        // .catch( err => {
+        //   this.error = 'maintance mode'
+        // })         
       }
-    }
+    },
 }
 </script>
 
 <style scoped>
+@import "../assets/scss/home.scss";
 .about {
   display: flex;
   flex-direction: column;
@@ -82,7 +110,4 @@ export default {
 .commentContainer {
   width: 100%;
 }
-
 </style>
-
-
