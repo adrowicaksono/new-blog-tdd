@@ -4,7 +4,7 @@
             <a>menu</a>
         </div>
         <div class="logo">
-               Logo
+               <img src="../assets/Blog.png" alt="" srcset="">
         </div>
         <div class="menu">
                 <ul v-bind:class="{showing: isMobile}">
@@ -23,7 +23,7 @@ export default {
         return{
             isLogin : false,
             isMobile:false,
-            img : '/img/lazadaIcon.png'
+            
         }
     },
     mounted () {
@@ -35,7 +35,6 @@ export default {
     },
     watch : {
       '$route' (to, from) {
-          console.log("woyyyyy")
           if(localStorage.getItem("Authorization")){
             this.isLogin = true
           }else{
